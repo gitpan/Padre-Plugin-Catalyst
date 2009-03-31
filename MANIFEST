@@ -1,0 +1,12 @@
+Build.PL
+Changes
+MANIFEST
+README
+lib/Padre/Plugin/Catalyst.pm
+lib/Padre/Plugin/Catalyst/Helper.pm
+lib/Padre/Plugin/Catalyst/NewApp.pm
+lib/Padre/Plugin/Catalyst/Util.pm
+t/00-load.t
+t/pod.t
+Makefile.PL
+META.yml
