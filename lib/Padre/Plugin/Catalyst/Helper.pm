@@ -8,7 +8,16 @@ use File::Spec        ();
 use Padre::Wx         ();
 use Padre::Wx::Dialog ();
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
+
+# TODO: these should've been passed as a parameter
+# but I'm too tired to figure how to do it
+# under a Wx::Dialog 
+my $helpers_for = {
+		'view'       => [],
+		'model'      => [],
+		'controller' => [],
+};
 
 sub dialog {
     my $layout = shift;
@@ -35,10 +44,35 @@ sub dialog {
 }
 
 sub get_model_layout {
+	my $available_models 
+		= $helpers_for->{'model'}; #shift; TODO: ungloball this
+		
+	my @layout = (
+		[
+			[ 'Wx::StaticText', undef,                    'Model Name:' ],
+			[ 'Wx::TextCtrl',   '_name_',                 ''            ],
+		],
+		[
+			[ 'Wx::StaticText', undef,                         'Type'   ],
+			[ 'Wx::Choice',     '_type_',            $available_models  ],
+		],
+		[
+			[ 'Wx::StaticText', undef           ,   'Additional Parameters:' ],
+			[ 'Wx::TextCtrl'  , '_extra_params_',   ''                       ],
+		],
+		[
+			[ 'Wx::CheckBox', '_force_', 'force', 0 ], #TODO add -mechanize parameter too
+		],
+		[
+			[ 'Wx::Button',     '_ok_',           Wx::wxID_OK     ],
+			[ 'Wx::Button',     '_cancel_',       Wx::wxID_CANCEL ],
+		],
+	);
+	return \@layout;
 }
 
 sub get_view_layout {
-	my $available_views = shift;
+	my $available_views = $helpers_for->{'view'}; #shift; TODO: ungloball this
 		
 	my @layout = (
 		[
@@ -61,6 +95,31 @@ sub get_view_layout {
 }
 
 sub get_controller_layout {
+	my $available_controllers 
+		= $helpers_for->{'controller'}; #shift; TODO: ungloball this
+		
+	my @layout = (
+		[
+			[ 'Wx::StaticText', undef,                    'Controller Name:' ],
+			[ 'Wx::TextCtrl',   '_name_',                 ''                 ],
+		],
+		[
+			[ 'Wx::StaticText', undef,                         'Type'        ],
+			[ 'Wx::Choice',     '_type_',            $available_controllers  ],
+		],
+		[
+			[ 'Wx::StaticText', undef           ,   'Additional Parameters:' ],
+			[ 'Wx::TextCtrl'  , '_extra_params_',   ''                       ],
+		],
+		[
+			[ 'Wx::CheckBox', '_force_', 'force', 0 ], #TODO add -mechanize parameter too
+		],
+		[
+			[ 'Wx::Button',     '_ok_',           Wx::wxID_OK     ],
+			[ 'Wx::Button',     '_cancel_',       Wx::wxID_CANCEL ],
+		],
+	);
+	return \@layout;
 }
 
 
@@ -70,43 +129,72 @@ sub find_helpers_for {
 	require Module::Pluggable::Object;
 	my @available_helpers = map { s{Catalyst::Helper::$type\:\:}{}; $_ 
 						    } Module::Pluggable::Object->new(
-									'search_path' => 'Catalyst::Helper::View',
+									'search_path' => "Catalyst::Helper::$type",
 							  )->plugins()
 						;
-	@available_helpers = sort @available_helpers;
+	push @available_helpers, '[none]';
+	
+	## Put preferred types first on the list. For example, 
+	# as a view, TT is preferred.
+	# TODO: make this configurable under a Plugin Preferences window
+	my $favourite = find_favourites($type, \@available_helpers);
+	
+	# puts favourite option always on top of the list
+	@available_helpers = (
+			$favourite,
+			grep {$_ ne $favourite} sort @available_helpers
+	);
 	return \@available_helpers;
 }
 
-sub on_create_view {
-	my $view_helpers = find_helpers_for('View');
-    unless (scalar @{$view_helpers} > 0) {
-    	my $main = Padre->ide->wx->main;
-		Wx::MessageBox(
-			'No helper views found.', 
-			'Helper error', Wx::wxOK, $main
-		);
-		return;
+sub find_favourites {
+	my $type = shift;
+	my $helpers = shift;
+	if ($type eq 'View') {
+		foreach (@{$helpers}) {
+			return $_ if ($_ eq 'TT');
+		}
+		return '[none]';
 	}
-    my $layout = get_view_layout($view_helpers);
-    
-    my $dialog = dialog($layout, \&create_view);
-    $dialog->Show(1);
-    return;
+	else {
+		return '[none]';
+	}
 }
 
-# stub for now
+
+sub on_create_view {
+	$helpers_for->{'view'} = find_helpers_for('View'); # TODO: unglobal this
+	my $layout = get_view_layout();
+	my $dialog = dialog($layout, \&create_view);
+	$dialog->Show(1);
+	return;
+}
+
+
 sub on_create_controller {
+	$helpers_for->{'controller'} = find_helpers_for('Controller'); # TODO: unglobal this
+	my $layout = get_controller_layout();
+	my $dialog = dialog($layout, \&create_controller);
+	$dialog->Show(1);
+	return;
 }
 
-# stub for now
+
 sub on_create_model {
+	$helpers_for->{'model'} = find_helpers_for('Model'); # TODO: unglobal this
+	my $layout = get_model_layout();
+	my $dialog = dialog($layout, \&create_model);
+	$dialog->Show(1);
+	return;
 }
+
 
 sub cancel_clicked {
 	my $dialog = shift;
 	$dialog->Destroy;
 	return;
 }
+
 
 sub create_view {
 	my $dialog = shift;
@@ -116,13 +204,22 @@ sub create_view {
 }
 
 sub create_model {
+	my $dialog = shift;
+	my $data = $dialog->get_data;
+	$dialog->Destroy;
+	create('Model', $data);
 }
 
 sub create_controller {
+	my $dialog = shift;
+	my $data = $dialog->get_data;
+	$dialog->Destroy;
+	create('Controller', $data);
 }
 
+
 sub create {
-	my $type = shift;
+	my $type = lc(shift);
 	my $data = shift;
    	my $main = Padre->ide->wx->main;
    	
@@ -155,19 +252,24 @@ sub create {
 	$main->show_output(1);
 	$main->output->Remove( 0, $main->output->GetLastPosition );
 
+    my $perl = Padre->perl_interpreter;
     push my @cmd, 
+				$perl,
 				File::Spec->catfile('script', $helper_filename),
-				lc $type,
+				$type,
 			;
 	
-	# TODO: this should've been passed as a parameter
-	# but I'm too tired to figure how to do it
-	# under a Wx::Dialog (make it a global in last case)
-	my $helper = find_helpers_for($type);
-	
+	my $helper = $helpers_for->{$type}; #TODO: unglobal this
 	push @cmd, 
 			$data->{'_name_'},
-			${$helper}[$data->{'_type_'}],
+			( ${$helper}[$data->{'_type_'}] eq '[none]' 
+			  ? '' 
+			  : ${$helper}[$data->{'_type_'}] 
+			),
+			( defined $data->{'_extra_params_'}
+			  ? $data->{'_extra_params_'}
+			  : ''
+			),
 		;
 
 	if ($data->{'_force_'}) {
@@ -185,31 +287,29 @@ sub create {
 	chdir $pwd; # restore directory
 
 	$main->output->AppendText("\nCatalyst helper script ended.\n");
-	
-	my $ret = Wx::MessageBox(
-		sprintf("%s apparently created. Do you want to open it now?", $type),
-		'Done',
-		Wx::wxYES_NO|Wx::wxCENTRE,
-		$main,
-	);
-	if ( $ret == Wx::wxYES ) {
-		my @dirs = File::Spec->splitdir($project_dir);
-		my @parts = split /-/, $dirs[-1];
 
-		my $file = File::Spec->catfile( $project_dir,
-                                        'lib', 
-                                        @parts,
-                                        $type,
-                                        $data->{'_name_'} . '.pm'
-                                      );
-		Padre::DB::History->create(
-			type => 'files',
-			name => $file,
+	require Padre::Plugin::Catalyst::Util;
+	my $file = Padre::Plugin::Catalyst::Util::find_file_from_output(
+					$data->{'_name_'}, 
+					$output_text
+			   );
+	$file = Cwd::realpath($file); # avoid relative paths
+	if ($file) {
+		my $ret = Wx::MessageBox(
+			sprintf("%s apparently created. Do you want to open it now?", $type),
+			'Done',
+			Wx::wxYES_NO|Wx::wxCENTRE,
+			$main,
 		);
-		$main->setup_editor($file);
-		$main->refresh;
+		if ( $ret == Wx::wxYES ) {
+			Padre::DB::History->create(
+				type => 'files',
+				name => $file,
+			);
+			$main->setup_editor($file);
+			$main->refresh;
+		}
 	}
-
 	return;
 }
 

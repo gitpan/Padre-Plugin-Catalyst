@@ -4,12 +4,10 @@ use base 'Padre::Plugin';
 use warnings;
 use strict;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 # The plugin name to show in the Plugin Manager and menus
-sub plugin_name {
-    'Catalyst';
-}
+sub plugin_name { 'Catalyst' }
   
 # Declare the Padre interfaces this plugin uses
 sub padre_interfaces {
@@ -18,7 +16,27 @@ sub padre_interfaces {
 #    'Padre::Wx::Main'       => 0.16,
 #    'Padre::DB'             => 0.16,
 }
-  
+
+sub plugin_icon {
+	my $icon = [ 
+		'16 16 46 1'   , '   c None'   , '.  c #D15C5C', '+  c #E88888', '@  c #E10000',
+		'#  c #D03131' , '$  c #D26262', '%  c #D26161', '&  c #E99F9F', '*  c #EFACAC',
+		'=  c #EFADAD' , '-  c #E79090', ';  c #D14949', '>  c #D22727', ',  c #E26666',
+		'\'  c #E26363', ')  c #E26464', '!  c #D42A2A', '~  c #D40101', '{  c #D50B0B',
+		']  c #D71313' , '^  c #D50C0C', '/  c #D40404', '(  c #D26767', '_  c #DF5353',
+		':  c #E15B5B' , '<  c #D95D5D', '[  c #D21313', '}  c #D30000', '|  c #DA0000',
+		'1  c #D90000' , '2  c #D31111', '3  c #D14646', '4  c #DC1313', '5  c #EC0000',
+		'6  c #E20000' , '7  c #F00000', '8  c #F20000', '9  c #D33232', '0  c #D64646',
+		'a  c #D46969' , 'b  c #D35555', 'c  c #D23A3A', 'd  c #E89090', 'e  c #E98E8E',
+		'f  c #D60000' , 'g  c #D70101', '                ', '            .   ',
+		'            +   ', '            @#  ', '                '  , '                ',
+		'        $%      ', '       &*=-;    ', '      >,\'\')!    ', '      ~{]]^/    ',
+		'(_: < [}|1}2    ', '345    67869    ', ' 0a         b c ', '              de'  ,
+		'              fg', '                ',
+	];
+	return Wx::Bitmap->newFromXPM( $icon );
+}
+
 # The command structure to show in the Plugins menu
 sub menu_plugins_simple {
     my $self = shift;
@@ -30,23 +48,44 @@ sub menu_plugins_simple {
                                 return;
                             },
             'Create new...' => [
-#                'Model'      => sub { 
-#								require Padre::Plugin::Catalyst::Helper;
-#								Padre::Plugin::Catalyst::Helper::on_create_model();
-#							},
+                'Model'      => sub { 
+								require Padre::Plugin::Catalyst::Helper;
+								Padre::Plugin::Catalyst::Helper::on_create_model();
+							},
                 'View'       => sub { 
 								require Padre::Plugin::Catalyst::Helper;
 								Padre::Plugin::Catalyst::Helper::on_create_view();
 							},
-#                'Controller' => sub {
-#								require Padre::Plugin::Catalyst::Helper;
-#								Padre::Plugin::Catalyst::Helper::on_create_controller();
-#							},
+                'Controller' => sub {
+								require Padre::Plugin::Catalyst::Helper;
+								Padre::Plugin::Catalyst::Helper::on_create_controller();
+							},
             ],
 			'---'     => undef, # separator
             'Start Web Server' => sub { $self->on_start_server },
             'Stop Web Server'  => sub { $self->on_stop_server  },
             '---'     => undef, # ...and another separator
+            'Catalyst Online References' => [
+				'Beginner\'s Tutorial' => sub { 
+					Wx::LaunchDefaultBrowser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial');
+				},
+				'Catalyst Cookbook' => sub {
+					Wx::LaunchDefaultBrowser('http://search.cpan.org/perldoc?Catalyst::Manual::Cookbook');
+				},
+				'Recommended Plugins' => sub {
+					Wx::LaunchDefaultBrowser('http://dev.catalystframework.org/wiki/recommended_plugins');
+				},
+				'Examples' => sub {
+					Wx::LaunchDefaultBrowser('http://dev.catalyst.perl.org/repos/Catalyst/trunk/examples/');
+				},
+				'Catalyst Wiki' => sub {
+					Wx::LaunchDefaultBrowser('http://dev.catalystframework.org/wiki/');
+				},
+				'Catalyst Website' => sub {
+					Wx::LaunchDefaultBrowser('http://www.catalystframework.org/');
+				},
+            ],
+            '---'     => undef, # ...oh
             'About'   => sub { $self->on_show_about },
     ];
 }
@@ -79,7 +118,9 @@ sub on_start_server {
 	my $pwd = Cwd::cwd();
 	chdir $project_dir;
 
-    $main->run_command(File::Spec->catfile('script', $server_filename));
+    my $perl = Padre->perl_interpreter;
+    my $command = "$perl " . File::Spec->catfile('script', $server_filename);
+    $main->run_command($command);
     
     # restore current dir
     chdir $pwd;
@@ -101,16 +142,18 @@ sub on_start_server {
 }
 
 sub on_stop_server {
-    # TODO: Make this actually call
-    # Run -> Stop
-    my $main = Padre->ide->wx->main;
-    if ( $main->{command} ) {
-        $main->{command}->TerminateProcess;
-    }
-    delete $main->{command};
-    $main->menu->run->enable;
-    $main->output->AppendText("\nWeb server stopped successfully.\n");
-    return;
+	# TODO: Make this actually call
+	# Run -> Stop
+	my $main = Padre->ide->wx->main;
+	if ( $main->{command} ) {
+		my $processid = $main->{command}->GetProcessId();
+		kill(9, $processid);
+		#$main->{command}->TerminateProcess;
+	}
+	delete $main->{command};
+	$main->menu->run->enable;
+	$main->output->AppendText("\nWeb server stopped successfully.\n");
+	return;
 }
 
 sub on_show_about {
@@ -143,7 +186,7 @@ Padre::Plugin::Catalyst - Simple Catalyst helper interface for Padre
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =head1 SYNOPSIS
 
@@ -159,21 +202,42 @@ Once you enable this Plugin under Padre, you'll get a brand new menu with the fo
 
 =head2 'New Catalyst Application'
 
+This options lets you create a new Catalyst application.
+
 =head2 'Create new...'
 
-=head3 'Model'
+The Catalyst helper lets you automatically create stub classes for your application's MVC components. With this menu option not only can you select your component's name but also its type. For instance, if you select "create new view" and have the L<Catalyst::Helper::View::TT> module installed on your system, the "TT" type will be available for you).
 
-=head3 'View'
+Of course, the available components are:
 
-=head3 'Controller'
+=over 4
+
+=item * 'Model'
+
+=item * 'View'
+
+=item * 'Controller'
+
+=back
 
 =head2 'Start Web Server'
 
+This option will automatically spawn your application's development web server. Once it's started, it will ask to open your default web browser to view your application running.
+
+Note that this works like Padre's "run" menu option, so any other execution it will be disabled while your server is running.
+
 =head2 'Stop Web Server'
+
+This option will stop the development web server for you.
+
+=head2 'Catalyst Online References'
+
+This menu option contains a series of external reference links on Catalyst. Clicking on each of them will point your default web browser to their websites.
 
 =head2 'About'
 
 Shows a nice about box with this module's name and version.
+
 
 =head1 AUTHOR
 

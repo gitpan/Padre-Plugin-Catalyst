@@ -8,10 +8,23 @@ use File::Spec        ();
 use Padre::Wx         ();
 use Padre::Wx::Dialog ();
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub on_newapp {
     my $main = Padre->ide->wx->main;
+    
+    my $has_catalyst_devel = eval 'use Catalyst::Devel; 1;'; ## no critic (ProhibitStringyEval)
+    unless ( $has_catalyst_devel ) {
+		return $main->error(<<ERR);
+To use the Catalyst development tools including catalyst.pl and the
+generated script/myapp_create.pl you need Catalyst::Helper, which is
+part of the Catalyst-Devel distribution. Please install this via a
+vendor package or by running one of -
+
+  perl -MCPAN -e 'install Catalyst::Devel'
+  perl -MCPANPLUS -e 'install Catalyst::Devel'
+ERR
+    }
     
     my $dialog = dialog($main);
     $dialog->Show(1);
@@ -28,6 +41,9 @@ sub get_layout {
 		[
 			[ 'Wx::StaticText',      undef,         'Parent Directory:'],
 			[ 'Wx::DirPickerCtrl',   '_directory_', '',   'Pick parent directory'],
+		],
+		[
+			[ 'Wx::CheckBox', '_short_', 'short names', 0 ],
 		],
 		[
 			[ 'Wx::Button',     '_ok_',           Wx::wxID_OK     ],
@@ -79,7 +95,7 @@ sub ok_clicked {
 	my $main = Padre->ide->wx->main;
 
 	# TODO improve input validation !
-	if ( $data->{'_app_name_'} =~ m{^\s*$|[^\w\:]} ) {
+	if ( $data->{'_app_name_'} =~ m{^\s*$|[^\w\:]}o ) {
         Wx::MessageBox('Invalid Application name', 'missing field', Wx::wxOK, $main);
         return;
 	}
@@ -101,18 +117,24 @@ sub ok_clicked {
 	$main->output->Remove( 0, $main->output->GetLastPosition );
 
 	my @command = (
-            'catalyst.pl',
-            $data->{'_app_name_'},
-        );
+			# use catalyst.bat on Windows
+			'catalyst' . ($^O =~ /Win/o ? '' : '.pl'),
+			( $data->{'_short_'}
+			  ? '-short'
+			  : ''
+			),
+			$data->{'_app_name_'},
+		);
 	
 	# go to the selected directory
 	my $pwd = Cwd::cwd();
 	chdir $data->{'_directory_'};
-
-	my $output_text = qx(@command);
-	$main->output->AppendText($output_text);
 	
-	chdir $pwd; # restore directory
+	# run command, then immediately restore directory
+	my $output_text = qx(@command);	
+	chdir $pwd;
+
+	$main->output->AppendText($output_text);
 
 	my $ret = Wx::MessageBox(
 		sprintf("%s apparently created. Do you want to open it now?", $data->{_app_name_}),
@@ -121,16 +143,14 @@ sub ok_clicked {
 		$main,
 	);
 	if ( $ret == Wx::wxYES ) {
-		# prepare Foo-Bar/lib/Foo/Bar/Controller/Root.pm
-		my @parts = split('::', $data->{'_app_name_'});
-		my $dir_name = join('-', @parts);
-		my $file = File::Spec->catfile( $data->{_directory_}, 
-                                        $dir_name, 
-                                        'lib', 
-                                        @parts,
-                                        'Controller',
-                                        'Root.pm'
-                                      );
+		require Padre::Plugin::Catalyst::Util;
+		my $file = Padre::Plugin::Catalyst::Util::find_file_from_output(
+						'Root', 
+						$output_text
+					);
+		$file = File::Spec->catfile( $data->{'_directory_'}, $file );
+		$file = Cwd::realpath($file); # avoid relative paths
+
 		Padre::DB::History->create(
 			type => 'files',
 			name => $file,
