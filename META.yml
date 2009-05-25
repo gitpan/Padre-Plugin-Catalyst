@@ -1,12 +1,14 @@
 ---
 name: Padre-Plugin-Catalyst
-version: 0.02
+version: 0.03
 author:
   - 'Breno G. de Oliveira <garu@cpan.org>'
 abstract: Simple Catalyst helper interface for Padre
 license: perl
 resources:
-  license: ~
+  homepage: http://padre.perlide.org/
+  license: http://dev.perl.org/licenses/
+  repository: http://svn.perlide.org/padre/trunk/Padre-Plugin-Catalyst/
 configure_requires:
   Padre::PluginBuilder: 0.12
 build_requires:
@@ -18,17 +20,17 @@ build_requires:
 provides:
   Padre::Plugin::Catalyst:
     file: lib/Padre/Plugin/Catalyst.pm
-    version: 0.02
+    version: 0.03
   Padre::Plugin::Catalyst::Helper:
     file: lib/Padre/Plugin/Catalyst/Helper.pm
-    version: 0.02
+    version: 0.03
   Padre::Plugin::Catalyst::NewApp:
     file: lib/Padre/Plugin/Catalyst/NewApp.pm
-    version: 0.02
+    version: 0.03
   Padre::Plugin::Catalyst::Util:
     file: lib/Padre/Plugin/Catalyst/Util.pm
-    version: 0.02
-generated_by: Module::Build version 0.32
+    version: 0.03
+generated_by: Module::Build version 0.33
 meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4

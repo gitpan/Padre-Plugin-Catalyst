@@ -1,5 +1,18 @@
 Revision history for Padre-Plugin-Catalyst
 
+
+0.03	
+	Default model name set to 'DB', type set to DBIC::Schema (if available) (GARU)
+	Added translation support (SZABGAB)
+	Added translations:
+	- Arabic                (AZAWAWI)
+	- Brazilian Portuguese  (GARU)
+	- Chinese (Traditional) (BLUET)
+	- Dutch                 (DDN)
+	- French                (JQUELIN)
+	- Polish                (THEREK)
+	- Russian               (SHARIFULN)
+
 0.02    2009-04-08
         Now working on MS-Windows too  (FAYLAND)
         Added "create new model" window (GARU)

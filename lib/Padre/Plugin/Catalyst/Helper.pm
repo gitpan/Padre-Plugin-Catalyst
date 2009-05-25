@@ -8,7 +8,7 @@ use File::Spec        ();
 use Padre::Wx         ();
 use Padre::Wx::Dialog ();
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 # TODO: these should've been passed as a parameter
 # but I'm too tired to figure how to do it
@@ -50,7 +50,7 @@ sub get_model_layout {
 	my @layout = (
 		[
 			[ 'Wx::StaticText', undef,                    'Model Name:' ],
-			[ 'Wx::TextCtrl',   '_name_',                 ''            ],
+			[ 'Wx::TextCtrl',   '_name_',                 'DB'          ],
 		],
 		[
 			[ 'Wx::StaticText', undef,                         'Type'   ],
@@ -154,11 +154,16 @@ sub find_favourites {
 		foreach (@{$helpers}) {
 			return $_ if ($_ eq 'TT');
 		}
-		return '[none]';
+	}
+	elsif ($type eq 'Model') {
+		foreach (@{$helpers}) {
+			return $_ if ($_ eq 'DBIC::Schema');
+		}
 	}
 	else {
 		return '[none]';
 	}
+	return '[none]';
 }
 
 
