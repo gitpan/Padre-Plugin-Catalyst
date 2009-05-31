@@ -6,7 +6,7 @@ use strict;
 
 use Padre::Util   ('_T');
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 # The plugin name to show in the Plugin Manager and menus
 sub plugin_name { 'Catalyst' }
@@ -68,23 +68,58 @@ sub menu_plugins_simple {
             _T('Stop Web Server')  => sub { $self->on_stop_server  },
             '---'     => undef, # ...and another separator
             _T('Catalyst Online References') => [
-				'Beginner\'s Tutorial' => sub { 
-					Wx::LaunchDefaultBrowser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial');
-				},
+				_T('Beginner\'s Tutorial') => [
+					_T('Overview') => sub { 
+						Padre::Wx::launch_browser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial');
+					},
+					_T('1. Introduction') => sub {
+						Padre::Wx::launch_browser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial::01_Intro');
+					},
+					_T('2. Catalyst Basics') => sub {
+						Padre::Wx::launch_browser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial::02_CatalystBasics');
+					},
+					_T('3. More Catalyst Basics') => sub {
+						Padre::Wx::launch_browser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial::03_MoreCatalystBasics');
+					},
+					_T('4. Basic CRUD') => sub {
+						Padre::Wx::launch_browser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial::04_BasicCRUD');
+					},
+					_T('5. Authentication') => sub {
+						Padre::Wx::launch_browser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial::05_Authentication');
+					},
+					_T('6. Authorization') => sub {
+						Padre::Wx::launch_browser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial::06_Authorization');
+					},
+					_T('7. Debugging') => sub {
+						Padre::Wx::launch_browser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial::07_Debugging');
+					},
+					_T('8. Testing') => sub {
+						Padre::Wx::launch_browser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial::08_Testing');
+					},
+					_T('9. Advanced CRUD') => sub {
+						Padre::Wx::launch_browser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial::09_AdvancedCRUD');
+					},
+					_T('10. Appendices') => sub {
+						Padre::Wx::launch_browser('http://search.cpan.org/perldoc?Catalyst::Manual::Tutorial::10_Appendices');
+					},
+				],
 				_T('Catalyst Cookbook') => sub {
-					Wx::LaunchDefaultBrowser('http://search.cpan.org/perldoc?Catalyst::Manual::Cookbook');
+					Padre::Wx::launch_browser('http://search.cpan.org/perldoc?Catalyst::Manual::Cookbook');
 				},
 				_T('Recommended Plugins') => sub {
-					Wx::LaunchDefaultBrowser('http://dev.catalystframework.org/wiki/recommended_plugins');
+					Padre::Wx::launch_browser('http://dev.catalystframework.org/wiki/recommended_plugins');
+				},
+				_T('Catalyst Community Live Support') => sub {
+					Padre::Wx::launch_irc( 'irc.perl.org' => 'catalyst' );
 				},
 				_T('Examples') => sub {
-					Wx::LaunchDefaultBrowser('http://dev.catalyst.perl.org/repos/Catalyst/trunk/examples/');
+					Padre::Wx::launch_browser('http://dev.catalyst.perl.org/repos/Catalyst/trunk/examples/');
 				},
 				_T('Catalyst Wiki') => sub {
-					Wx::LaunchDefaultBrowser('http://dev.catalystframework.org/wiki/');
+					Padre::Wx::launch_browser('http://dev.catalystframework.org/wiki/');
 				},
 				_T('Catalyst Website') => sub {
-					Wx::LaunchDefaultBrowser('http://www.catalystframework.org/');
+					Padre::Wx::launch_browser('http://www.catalystframework.org/');
 				},
             ],
             '---'     => undef, # ...oh
@@ -135,7 +170,7 @@ sub on_start_server {
 		$main,
 	);
 	if ( $ret == Wx::wxYES ) {
-        Wx::LaunchDefaultBrowser('http://localhost:3000');
+        Padre::Wx::launch_browser('http://localhost:3000');
     }
     
     #TODO: handle menu greying
@@ -190,7 +225,7 @@ Padre::Plugin::Catalyst - Simple Catalyst helper interface for Padre
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =head1 SYNOPSIS
 
