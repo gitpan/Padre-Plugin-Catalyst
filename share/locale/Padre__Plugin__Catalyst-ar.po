@@ -1,0 +1,277 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: padre-plugin-catalyst\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-07-19 18:27-0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Ahmad M. Zawawi <ahmad.zawawi@gmail.com>\n"
+"Language-Team: Ahmad M. Zawawi <ahmad.zawawi@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Arabic\n"
+
+#: lib/Padre/Plugin/Catalyst.pm:47
+msgid "New Catalyst Application"
+msgstr "تطبيق Catalyst جديد"
+
+#: lib/Padre/Plugin/Catalyst.pm:52
+msgid "Create new..."
+msgstr "انشاء جديد..."
+
+#: lib/Padre/Plugin/Catalyst.pm:53
+msgid "Model"
+msgstr "نموذج - Model"
+
+#: lib/Padre/Plugin/Catalyst.pm:57
+msgid "View"
+msgstr "مشهد - View"
+
+#: lib/Padre/Plugin/Catalyst.pm:61
+msgid "Controller"
+msgstr "مراقب - Controller"
+
+#: lib/Padre/Plugin/Catalyst.pm:67
+msgid "Start Web Server"
+msgstr "تشغيل خادم الويب"
+
+#: lib/Padre/Plugin/Catalyst.pm:68
+msgid "Stop Web Server"
+msgstr "ايقاف خادم الويب"
+
+#: lib/Padre/Plugin/Catalyst.pm:70
+msgid "Catalyst Online References"
+msgstr "مراجع Catalyst على الانترنت"
+
+#: lib/Padre/Plugin/Catalyst.pm:71
+msgid "Beginner's Tutorial"
+msgstr "دروس المبتدئ"
+
+#: lib/Padre/Plugin/Catalyst.pm:72
+msgid "Overview"
+msgstr "نظرة عامة"
+
+#: lib/Padre/Plugin/Catalyst.pm:75
+msgid "1. Introduction"
+msgstr "1. مقدمة"
+
+#: lib/Padre/Plugin/Catalyst.pm:78
+msgid "2. Catalyst Basics"
+msgstr "2. أساسيات Catalyst"
+
+#: lib/Padre/Plugin/Catalyst.pm:81
+msgid "3. More Catalyst Basics"
+msgstr "3. المزيد من أساسيات Catalyst"
+
+#: lib/Padre/Plugin/Catalyst.pm:84
+msgid "4. Basic CRUD"
+msgstr "4. مبدأ CRUD"
+
+#: lib/Padre/Plugin/Catalyst.pm:87
+msgid "5. Authentication"
+msgstr "5. التأكد من الهوية"
+
+#: lib/Padre/Plugin/Catalyst.pm:90
+msgid "6. Authorization"
+msgstr "6. السماح بالدخول"
+
+#: lib/Padre/Plugin/Catalyst.pm:93
+msgid "7. Debugging"
+msgstr "7. تصحيح الأخطاء"
+
+#: lib/Padre/Plugin/Catalyst.pm:96
+msgid "8. Testing"
+msgstr "8. الاختبار"
+
+#: lib/Padre/Plugin/Catalyst.pm:99
+msgid "9. Advanced CRUD"
+msgstr "9. CRUD متقدم"
+
+#: lib/Padre/Plugin/Catalyst.pm:102
+msgid "10. Appendices"
+msgstr "10. الملحقات"
+
+#: lib/Padre/Plugin/Catalyst.pm:106
+msgid "Catalyst Cookbook"
+msgstr "كتاب طهي Catalyst"
+
+#: lib/Padre/Plugin/Catalyst.pm:109
+msgid "Recommended Plugins"
+msgstr "البرامج الملحقه الموصى بها"
+
+#: lib/Padre/Plugin/Catalyst.pm:112
+msgid "Catalyst Community Live Support"
+msgstr "دعم مجتمع Catalyst المباشر"
+
+#: lib/Padre/Plugin/Catalyst.pm:115
+msgid "Examples"
+msgstr "أمثلة"
+
+#: lib/Padre/Plugin/Catalyst.pm:118
+msgid "Catalyst Wiki"
+msgstr "ويكي Catalyst"
+
+#: lib/Padre/Plugin/Catalyst.pm:121
+msgid "Catalyst Website"
+msgstr "موقع Catalyst الاكتروني"
+
+#: lib/Padre/Plugin/Catalyst.pm:126
+msgid "Update Application Scripts"
+msgstr "تحديث برامج التطبيق النصية"
+
+#: lib/Padre/Plugin/Catalyst.pm:128
+msgid "About"
+msgstr "عن"
+
+#: lib/Padre/Plugin/Catalyst.pm:169
+#, perl-format
+msgid ""
+"Catalyst development web server not found at\n"
+"%s\n"
+"\n"
+"Please make sure the active document is from your Catalyst project."
+msgstr ""
+"لا يمكن العثور على خادم الويب التطويري لCatalyst \n"
+"%s\n"
+"\n"
+"الرجاء التأكد من أن الوثيقة الحالية هي من مشروع Catalyst الخاص بك."
+
+#: lib/Padre/Plugin/Catalyst.pm:172
+msgid "Server not found"
+msgstr "الخادم غير موجود"
+
+#: lib/Padre/Plugin/Catalyst.pm:192
+msgid "Web server appears to be running. Launch web browser now?"
+msgstr "يبدو ان خادم الويب مشغل. هل تريد تشغيل متصفح الويب الآن؟"
+
+#: lib/Padre/Plugin/Catalyst.pm:193
+msgid "Start Web Browser?"
+msgstr "هل تريد تشغيل متصفح الويب؟"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:32
+msgid "Create New Component"
+msgstr "انشاء مركب جديد"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:53
+msgid "Model Name:"
+msgstr "اسم النموذج Model:"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:57
+#: lib/Padre/Plugin/Catalyst/Helper.pm:84
+#: lib/Padre/Plugin/Catalyst/Helper.pm:108
+msgid "Type"
+msgstr "نوع"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:61
+#: lib/Padre/Plugin/Catalyst/Helper.pm:112
+msgid "Additional Parameters:"
+msgstr "باراميترات اضافية:"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:80
+msgid "View Name:"
+msgstr "اسم المشهد View:"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:88
+msgid "force"
+msgstr "مجبر"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:104
+msgid "Controller Name:"
+msgstr "اسم المراقب Controller:"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:129
+#: lib/Padre/Plugin/Catalyst/Helper.pm:156
+msgid "[none]"
+msgstr "[بلا]"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:236
+#, perl-format
+msgid "You must provide a name for your %s module"
+msgstr "يجب أن توفر اسما لوحدتك %s"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:237
+msgid "Module name required"
+msgstr "اسم الوحدة مطلوب"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:251
+#, perl-format
+msgid ""
+"Catalyst helper script not found at\n"
+"%s\n"
+"\n"
+"Please make sure the active document is from your Catalyst project."
+msgstr ""
+"لا يمكن العثور على برنامج Catalyst النصي\n"
+"%s\n"
+"\n"
+"الرجاء التأكد من أن الوثيقة الحالية هي من مشروع Catalyst الخاص بك."
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:254
+msgid "Helper not found"
+msgstr "المساعد غير موجود"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:287
+msgid "running:"
+msgstr "مشغل:"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:297
+msgid "Catalyst helper script ended."
+msgstr "انهى برنامج Catalyst  النصي المساعد عمله."
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:307
+#: lib/Padre/Plugin/Catalyst/NewApp.pm:144
+#, perl-format
+msgid "%s apparently created. Do you want to open it now?"
+msgstr "تم كما يبدو انشاء%s . هل تريد فتح الملف الان؟"
+
+#: lib/Padre/Plugin/Catalyst/Helper.pm:308
+msgid "Done"
+msgstr "تم"
+
+#: lib/Padre/Plugin/Catalyst/NewApp.pm:21
+msgid ""
+"To use the Catalyst development tools including catalyst.pl and the\n"
+"generated script/myapp_create.pl you need Catalyst::Helper, which is\n"
+"part of the Catalyst-Devel distribution. Please install this via a\n"
+"vendor package or by running one of -\n"
+"\n"
+"  perl -MCPAN -e 'install Catalyst::Devel'\n"
+"  perl -MCPANPLUS -e 'install Catalyst::Devel'\n"
+msgstr ""
+"لاستعمال أدوات تطوير Catalyst التي تشمل catalyst.pl و\n"
+"generated script/myapp_create.pl تحتاج إلى Catalyst::Helper وهو\n"
+"جزء من توزيعة Catalyst-Devel distribution. الرجاء التثبيت عن طريق\n"
+"رزمة من البائع أو تشغيل واحد من هذه الأوامر -\n"
+"\n"
+"  perl -MCPAN -e 'install Catalyst::Devel'\n"
+"  perl -MCPANPLUS -e 'install Catalyst::Devel'\n"
+
+#: lib/Padre/Plugin/Catalyst/NewApp.pm:42
+msgid "Application Name:"
+msgstr "اسم التطبيق:"
+
+#: lib/Padre/Plugin/Catalyst/NewApp.pm:46
+msgid "Parent Directory:"
+msgstr "الدليل الأصل:"
+
+#: lib/Padre/Plugin/Catalyst/NewApp.pm:47
+msgid "Pick parent directory"
+msgstr "اختر الدليل الأب"
+
+#: lib/Padre/Plugin/Catalyst/NewApp.pm:50
+msgid "short names"
+msgstr "اسماء قصيرة"
+
+#: lib/Padre/Plugin/Catalyst/NewApp.pm:103
+msgid "Invalid Application name"
+msgstr "اسم التطبيق خاطئ"
+
+#: lib/Padre/Plugin/Catalyst/NewApp.pm:103
+#: lib/Padre/Plugin/Catalyst/NewApp.pm:107
+msgid "missing field"
+msgstr "حقل مفقود"
+
+#: lib/Padre/Plugin/Catalyst/NewApp.pm:107
+msgid "You need to select a base directory"
+msgstr "يجب اختيار دليل الأصل"
+

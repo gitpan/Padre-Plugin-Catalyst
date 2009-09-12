@@ -1,110 +1,115 @@
+#
+# Cezary Morga <cm@therek.net>, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: padre-plugin-catalyst\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-05-30 15:40-0300\n"
-"PO-Revision-Date: \n"
-"Last-Translator: Breno G. de Oliveira <garu@cpan.org>\n"
-"Language-Team: brazilian portuguese\n"
+"PO-Revision-Date: 2009-06-03 17:22+0200\n"
+"Last-Translator: Cezary Morga <cm@therek.net>\n"
+"Language-Team: Polish <>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 0.3\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
 #: lib/Padre/Plugin/Catalyst.pm:47
 msgid "New Catalyst Application"
-msgstr "Novo Aplicativo Catalyst"
+msgstr "Nowa aplikacja Catalyst"
 
 #: lib/Padre/Plugin/Catalyst.pm:52
 msgid "Create new..."
-msgstr "Criar um novo..."
+msgstr "UtwÃ³rz nowy..."
 
 #: lib/Padre/Plugin/Catalyst.pm:53
 msgid "Model"
-msgstr "Modelo"
+msgstr "Model"
 
 #: lib/Padre/Plugin/Catalyst.pm:57
 msgid "View"
-msgstr "Vista"
+msgstr "Widok"
 
 #: lib/Padre/Plugin/Catalyst.pm:61
 msgid "Controller"
-msgstr "Controlador"
+msgstr "Kontroler"
 
 #: lib/Padre/Plugin/Catalyst.pm:67
 msgid "Start Web Server"
-msgstr "Iniciar Servidor Web"
+msgstr "Uruchom serwer WWW"
 
 #: lib/Padre/Plugin/Catalyst.pm:68
 msgid "Stop Web Server"
-msgstr "Parar Servidor Web"
+msgstr "Zatrzymaj serwer WWW"
 
 #: lib/Padre/Plugin/Catalyst.pm:70
 msgid "Catalyst Online References"
-msgstr "Referências do Catalyst Online"
+msgstr "Dokumentacja Catalyst online"
 
 #: lib/Padre/Plugin/Catalyst.pm:71
 msgid "Beginner's Tutorial"
-msgstr "Tutorial para Iniciantes"
+msgstr "PodrÄ™cznik poczÄ…tkujÄ…cego"
 
 #: lib/Padre/Plugin/Catalyst.pm:72
 msgid "Overview"
-msgstr "Visão Geral"
+msgstr "PrzeglÄ…d"
 
 #: lib/Padre/Plugin/Catalyst.pm:75
 msgid "1. Introduction"
-msgstr "1. Introdução"
+msgstr "1. Wprowadzenie"
 
 #: lib/Padre/Plugin/Catalyst.pm:78
 msgid "2. Catalyst Basics"
-msgstr "2. Catalyst Básico"
+msgstr "2. Podstawy Catalyst"
 
 #: lib/Padre/Plugin/Catalyst.pm:81
 msgid "3. More Catalyst Basics"
-msgstr "3. Mais Catalyst Básico"
+msgstr "3. WiÄ™cej o podstawach Catalyst"
 
 #: lib/Padre/Plugin/Catalyst.pm:84
 msgid "4. Basic CRUD"
-msgstr "4. CRUD Básico"
+msgstr "4. Podstawy CRUD"
 
 #: lib/Padre/Plugin/Catalyst.pm:87
 msgid "5. Authentication"
-msgstr "5. Autenticação"
+msgstr "5. Uwierzytelnianie"
 
 #: lib/Padre/Plugin/Catalyst.pm:90
 msgid "6. Authorization"
-msgstr "6. Autorização"
+msgstr "6. Autoryzacja"
 
 #: lib/Padre/Plugin/Catalyst.pm:93
 msgid "7. Debugging"
-msgstr "7. Depurando"
+msgstr "7. Debugowanie"
 
 #: lib/Padre/Plugin/Catalyst.pm:96
 msgid "8. Testing"
-msgstr "8. Testando"
+msgstr "8. Testowanie"
 
 #: lib/Padre/Plugin/Catalyst.pm:99
 msgid "9. Advanced CRUD"
-msgstr "9. CRUD Avançado"
+msgstr "9. Zaawansowane zagadnienia CRUD"
 
 #: lib/Padre/Plugin/Catalyst.pm:102
 msgid "10. Appendices"
-msgstr "10. Apêndices"
+msgstr "10. Dodatki"
 
 #: lib/Padre/Plugin/Catalyst.pm:106
 msgid "Catalyst Cookbook"
-msgstr "Livro de Receitas do Catalyst"
+msgstr "KsiÄ…Å¼ka kucharska Catalyst"
 
 #: lib/Padre/Plugin/Catalyst.pm:109
 msgid "Recommended Plugins"
-msgstr "Plugins Recomendados"
+msgstr "Zalecane wtyczki"
 
 #: lib/Padre/Plugin/Catalyst.pm:112
 msgid "Catalyst Community Live Support"
-msgstr "Suporte Online da Comunidade Catalyst"
+msgstr "Wsparcie techniczne spoÅ‚ecznoÅ›ci Catalyst"
 
 #: lib/Padre/Plugin/Catalyst.pm:115
 msgid "Examples"
-msgstr "Exemplos"
+msgstr "PrzykÅ‚ady"
 
 #: lib/Padre/Plugin/Catalyst.pm:118
 msgid "Catalyst Wiki"
@@ -112,11 +117,11 @@ msgstr "Wiki Catalyst"
 
 #: lib/Padre/Plugin/Catalyst.pm:121
 msgid "Catalyst Website"
-msgstr "Site do Catalyst"
+msgstr "Strona WWW Catalyst"
 
 #: lib/Padre/Plugin/Catalyst.pm:126
 msgid "About"
-msgstr "Sobre"
+msgstr "O wtyczce"
 
 #: lib/Padre/Plugin/Catalyst.pm:144
 #, perl-format
@@ -126,20 +131,20 @@ msgid ""
 "\n"
 "Please make sure the active document is from your Catalyst project."
 msgstr ""
-"Servidor web de desenvolvimento não encontrado em\n"
+"Nie odnaleziono serwera WWW Catalyst pod adresem\n"
 "%s\n"
 "\n"
-"Por favor certifique-se de que o documento ativo faz parte de seu projeto Catalyst."
+"Upewnij siÄ™, Å¼e aktywny dokument naleÅ¼y do Twojego projektu Catalyst."
 
 #: lib/Padre/Plugin/Catalyst.pm:147
 msgid "Server not found"
-msgstr "Servidor não encontrado"
+msgstr "Nie odnaleziono serwera"
 
 #: lib/Padre/Plugin/Catalyst.pm:167
 msgid "Web server appears to be running. Launch web browser now?"
-msgstr "Servidor web parece estar em execução. Iniciar navegador web agora?"
+msgstr "Serwer WWW zdaje siÄ™ dziaÅ‚aÄ‡. Czy uruchomiÄ‡ teraz przeglÄ…darkÄ™ WWW?"
 
 #: lib/Padre/Plugin/Catalyst.pm:168
 msgid "Start Web Browser?"
-msgstr "Iniciar Navegador Web?"
+msgstr "UruchomiÄ‡ przeglÄ…darkÄ™ WWW?"
 
