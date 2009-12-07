@@ -7,7 +7,7 @@ use strict;
 use Padre::Util   ('_T');
 use Padre::Perl;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 # The plugin name to show in the Plugin Manager and menus
 sub plugin_name { 'Catalyst' }
@@ -244,7 +244,6 @@ sub menu_plugins {
             Padre::Wx::launch_browser('http://www.catalystframework.org/');
         },
     );
-
     
     $menu->AppendSeparator;
     Wx::Event::EVT_MENU(
@@ -259,20 +258,94 @@ sub menu_plugins {
         $menu->Append(-1, _T('About')),
         sub { $self->on_show_about },
     );
-
-#    $menu->AppendSeparator;
-#    my $about = $menu->Append( -1, 'About' );
-#    Wx::Event::EVT_MENU(
-#        $main,
-#        $about,
-#        sub { $self->on_show_about },
-#    );
-#    $about->Enable(0);
     
     # Return it and the label for our plug-in
     return ( $self->plugin_name => $menu );   
 }
 
+
+sub event_on_context_menu {
+    my ($self, $document, $editor, $menu, $event) = (@_);
+    
+	my $pos;
+	if ( $event->isa("Wx::MouseEvent") ) {
+		my $point = $event->GetPosition();
+		if ( $point != Wx::wxDefaultPosition ) {
+
+			# Then it is really a mouse event...
+			# On Windows, context menu is faked
+			# as a Mouse event
+			$pos = $editor->PositionFromPoint($point);
+		}
+	}
+
+	# Fall back to the cursor position if necessary
+    $pos = $editor->GetCurrentPos()	unless ($pos);
+
+    my $template = _get_template($editor, $pos);
+    if ($template) {
+        $menu->AppendSeparator;
+        my $item = $menu->Append( -1, 
+            sprintf(_T("Open Template '%s'"), $template),
+        );
+        Wx::Event::EVT_MENU(
+            $self->main,
+            $item,
+            sub { \&_open_template(shift, $template) },
+        );    
+    }
+    
+}
+
+sub _open_template {
+    my ($main, $template) = (@_);
+    
+    require File::Spec;
+    require File::Find;
+    require Padre::Plugin::Catalyst::Util;
+    
+    my $project_dir = Padre::Plugin::Catalyst::Util::get_document_base_dir();
+    my $template_dir = File::Spec->catdir( $project_dir, 'root' );
+    
+    my @files;
+    File::Find::find(
+        sub {
+            if($File::Find::name =~ /$template$/ ) {
+                push @files, $File::Find::name;
+            }
+        }, $template_dir
+    );
+    
+    unless (@files) {
+        Wx::MessageBox(
+            sprintf(_T("Template '%s' not found in '%s'"),
+            $template, $template_dir
+            ), _T('Error'), Wx::wxOK, $main);   
+    }
+    
+    # if we get over one result, we default to the
+    # shortest path
+    my $file = shift @files;
+    foreach (@files) {
+        $file = $_ if length($file) > length($_);
+    }
+    $main->setup_editors($file);
+}
+
+sub _get_template {
+    my ($editor, $pos) = (@_);
+    
+    my $line = $editor->LineFromPosition($pos);
+    my $line_start   = $editor->PositionFromLine($line);
+	my $line_end     = $editor->GetLineEndPosition($line);
+	my $cursor_col   = $pos - $line_start;
+	my $line_content = $editor->GetTextRange( $line_start, $line_end );
+	
+	#TODO: improve template detection
+	if ($line_content =~ /([\/\w]+\.tt\d?)/ ) {
+	    return $1;
+	}
+}
 
 sub on_update_script {
     my $main = Padre->ide->wx->main;
@@ -298,8 +371,15 @@ sub on_update_script {
 }
 
 sub on_start_server {
-    my $main = Padre->ide->wx->main;
+    my $self = shift;
 
+    #TODO FIXME: if the user closed the panel,
+    # how do we know? and how do we show it again?
+    # as it is, Padre crashes :(
+	#Padre::Current->main->bottom->show($self->panel);
+    
+    my $main = Padre->ide->wx->main;
+    
 	require File::Spec;
 	require Padre::Plugin::Catalyst::Util;
     my $project_dir = Padre::Plugin::Catalyst::Util::get_document_base_dir();
@@ -327,13 +407,19 @@ sub on_start_server {
 
     my $perl = Padre::Perl->perl;
     my $command = "$perl " . File::Spec->catfile('script', $server_filename);
-    $main->run_command($command);
+    $command .= ' -r ' if $self->panel->{checkbox}->IsChecked;
+
+    #$main->run_command($command);    
+    # somewhat the same as $main->run_command,
+    # but in our very own panel, and with our own rigs
+    $self->run_command($command);
     
     # restore current dir
     chdir $pwd;
     
     # handle menu graying
-    Padre::Plugin::Catalyst::Util::toggle_server_menu(1);
+    Padre::Plugin::Catalyst::Util::toggle_server_menu(0);
+    $self->panel->toggle_panel(0);
     
     # TODO: actually check whether this is true.
     my $ret = Wx::MessageBox(
@@ -349,22 +435,106 @@ sub on_start_server {
     return;
 }
 
-sub on_stop_server {
-	# TODO: Make this actually call
-	# Run -> Stop
-	my $main = Padre->ide->wx->main;
-	if ( $main->{command} ) {
-		my $processid = $main->{command}->GetProcessId();
-		kill(9, $processid);
-		#$main->{command}->TerminateProcess;
+
+### run_command() adapted from Padre::Wx::Main's version
+sub run_command {
+    my ($self, $command)= (@_);
+    
+    # clear the panel
+    $self->panel->output->Remove( 0, $self->panel->output->GetLastPosition );
+    
+    # If this is the first time a command has been run,
+	# set up the ProcessStream bindings.
+	unless ($Wx::Perl::ProcessStream::VERSION) {
+		require Wx::Perl::ProcessStream;
+		if ( $Wx::Perl::ProcessStream::VERSION < .20 ) {
+			$self->main->error(
+				sprintf(
+					_T(
+						      'Wx::Perl::ProcessStream is version %s'
+							. ' which is known to cause problems. Get at least 0.20 by typing'
+							. "\ncpan Wx::Perl::ProcessStream"
+					),
+					$Wx::Perl::ProcessStream::VERSION
+				)
+			);
+			return 1;
+		}
+
+		Wx::Perl::ProcessStream::EVT_WXP_PROCESS_STREAM_STDOUT(
+			$self->panel->output,
+			sub {
+				$_[1]->Skip(1);
+				my $outpanel = $_[0];#->{panel};
+				$outpanel->style_good;
+				$outpanel->AppendText( $_[1]->GetLine . "\n" );
+				return;
+			},
+		);
+		Wx::Perl::ProcessStream::EVT_WXP_PROCESS_STREAM_STDERR(
+			$self->panel->output,
+			sub {
+				$_[1]->Skip(1);
+				my $outpanel = $_[0];#->{panel};
+				$outpanel->style_neutral;
+				$outpanel->AppendText( $_[1]->GetLine . "\n" );
+
+				return;
+			},
+		);
+		Wx::Perl::ProcessStream::EVT_WXP_PROCESS_STREAM_EXIT(
+			$self->panel->output,
+			sub {
+				$_[1]->Skip(1);
+				$_[1]->GetProcess->Destroy;
+				delete $self->{server};
+			},
+		);
 	}
-	delete $main->{command};
-	$main->menu->run->enable;
-	$main->output->AppendText("\nWeb server stopped successfully.\n");
+
+	# Start the command
+	my $process = Wx::Perl::ProcessStream::Process->new( 
+	                           $command, 
+	                           "Run $command", 
+	                           $self->panel->output
+	            );
+	$self->{server} = $process->Run;
+
+	# Check if we started the process or not
+	unless ( $self->{server} ) {
+
+		# Failed to start the command. Clean up.
+		Wx::MessageBox(
+			sprintf( _T("Failed to start server via '%s'"), $command ),
+			_T("Error"), Wx::wxOK, $self
+		);
+#		$self->menu->run->enable;
+	}
+
+	return;
+}
+
+sub on_stop_server {
+    my $self = shift;
+
+    #TODO FIXME: if the user closed the panel,
+    # how do we know? and how do we show it again?
+    # as it is, Padre crashes :(
+	#Padre::Current->main->bottom->show($self->panel);
+        
+	if ( $self->{server} ) {
+		my $processid = $self->{server}->GetProcessId();
+		kill(9, $processid);
+		#$self->{server}->TerminateProcess;
+	}
+	delete $self->{server};
+
+	$self->panel->output->AppendText("\n" . _T('Web server stopped successfully.') . "\n");
 	
     # handle menu graying
     require Padre::Plugin::Catalyst::Util;
-    Padre::Plugin::Catalyst::Util::toggle_server_menu(0);
+    Padre::Plugin::Catalyst::Util::toggle_server_menu(1);
+    $self->panel->toggle_panel(1);
 
 	return;
 }
@@ -374,9 +544,8 @@ sub on_show_about {
 	require Class::Unload;
 	my $about = Wx::AboutDialogInfo->new;
 	$about->SetName("Padre::Plugin::Catalyst");
-	$about->SetDescription(
-		  "Initial Catalyst support for Padre\n\n"
-		. "This system is running Catalyst version " . $Catalyst::VERSION . "\n"
+	$about->SetDescription( _T('Catalyst support for Padre') . "\n\n"
+		. _T('This system is running Catalyst version') . " $Catalyst::VERSION\n"
 	);
 	$about->SetVersion( $VERSION );
     Class::Unload->unload('Catalyst');
@@ -385,11 +554,28 @@ sub on_show_about {
 	return;
 }
 
+sub plugin_enable {
+    my $self = shift;
+    require Padre::Plugin::Catalyst::Panel;
+    $self->{panel} = Padre::Plugin::Catalyst::Panel->new($self);
+
+# TODO: Please uncomment this to test the Catalyst side-panel
+#    require Padre::Plugin::Catalyst::Outline;
+#    $self->{outline} = Padre::Plugin::Catalyst::Outline->new($self);
+}
+
+sub panel { return shift->{panel} }
+
 sub plugin_disable {
+    my $self = shift;
+    $self->panel->Destroy;
+    
+    # cleanup loaded classes
     require Class::Unload;
     Class::Unload->unload('Padre::Plugin::Catalyst::NewApp');
     Class::Unload->unload('Padre::Plugin::Catalyst::Helper');
     Class::Unload->unload('Padre::Plugin::Catalyst::Util');
+    Class::Unload->unload('Padre::Plugin::Catalyst::Panel');
     Class::Unload->unload('Catalyst');
 }
 
@@ -397,23 +583,29 @@ sub plugin_disable {
 __END__
 =head1 NAME
 
-Padre::Plugin::Catalyst - Simple Catalyst helper interface for Padre
+Padre::Plugin::Catalyst - Catalyst helper interface for Padre
 
 =head1 VERSION
 
-Version 0.04
+Version 0.07
 
 =head1 SYNOPSIS
-
-B<WARNING: CODE IN PROGRESS>
 
 	cpan install Padre::Plugin::Catalyst;
 
 Then use it via L<Padre>, The Perl IDE.
 
+=head1 IDEAS WANTED!
+
+How can this Plugin further improve your Catalyst development experience? Please let us know! We are always looking for new ideas and wishlists on how to improve it even more, so drop us a line via email, RT or by joining us via IRC in #padre, right at irc.perl.org (if you are using Padre, you can do this by choosing 'Help->Live Support->Padre Support').
+
 =head1 DESCRIPTION
 
-Once you enable this Plugin under Padre, you'll get a brand new menu (Plugins->Catalyst) with the following options:
+As all Padre plugins, after installation you need to enable it via "Plugins->Plugin Manager".
+
+Once you enable it, you should see a 'Catalyst Dev Server' panel on the bottom of your screen (probably next to your 'output' tab). This panel lets you start/stop your application's development server, and also set the auto-restart option for the server to reload itself whenever you change your application's modules or configuration files.
+
+You'll also get a brand new menu (Plugins->Catalyst) with the following options:
 
 =head2 'New Catalyst Application'
 
@@ -439,7 +631,7 @@ Of course, the available components are:
 
 This option will automatically spawn your application's development web server. Once it's started, it will ask to open your default web browser to view your application running.
 
-Note that this works like Padre's "run" menu option, so any other execution it will be disabled while your server is running.
+The server output should appear in your "Catalyst Dev Server" panel.
 
 =head2 'Stop Web Server'
 
@@ -449,9 +641,13 @@ This option will stop the development web server for you.
 
 This menu option contains a series of external reference links on Catalyst. Clicking on each of them will point your default web browser to their websites.
 
+=head2 'Update Application Scripts'
+
+This option lets you update your application's scripts, upgrading it to a new version of Catalyst (if available)
+
 =head2 'About'
 
-Shows a nice about box with this module's name and version.
+Shows a nice about box with this module's name and version, as well as your installed Catalyst version.
 
 =head1 TRANSLATIONS
 
@@ -469,7 +665,7 @@ This plugin has been translated to the folowing languages (alfabetic order):
 
 =item French (JQUELIN)
 
-=item German (Sebastian Willing)
+=item German (SEWI)
 
 =item Japanese (ISHIGAKI)
 

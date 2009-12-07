@@ -7,7 +7,7 @@ use Cwd ();
 use File::Spec ();
 use Padre::Util   ('_T');
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 # get the Catalyst project name, so we can
 # figure out the development server's name
@@ -82,8 +82,8 @@ sub toggle_server_menu {
         _T('Stop Web Server')
     );
     if ($menu_start and $menu_stop) {
-        $menu_start->Enable(!$toggle);
-        $menu_stop->Enable($toggle);
+        $menu_start->Enable($toggle);
+        $menu_stop->Enable(!$toggle);
     }
 }
 

@@ -5,6 +5,7 @@ README
 lib/Padre/Plugin/Catalyst.pm
 lib/Padre/Plugin/Catalyst/Helper.pm
 lib/Padre/Plugin/Catalyst/NewApp.pm
+lib/Padre/Plugin/Catalyst/Panel.pm
 lib/Padre/Plugin/Catalyst/Util.pm
 share/locale/Padre__Plugin__Catalyst-ar.po
 share/locale/Padre__Plugin__Catalyst-de.po
