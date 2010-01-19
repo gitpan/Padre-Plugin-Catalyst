@@ -10,7 +10,7 @@ use Padre::Wx::Dialog ();
 use Padre::Util       ('_T');
 use Padre::Perl;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 # TODO: these should've been passed as a parameter
 # but I'm too tired to figure how to do it
@@ -241,7 +241,7 @@ sub create {
 	}
    	
    	require Padre::Plugin::Catalyst::Util;
-   	my $project_dir = Padre::Plugin::Catalyst::Util::get_document_base_dir();
+   	my $project_dir = Padre::Plugin::Catalyst::Util::get_document_base_dir() || return;
 					
    	my $helper_filename = Padre::Plugin::Catalyst::Util::get_catalyst_project_name($project_dir);
    	$helper_filename .= '_create.pl';
@@ -290,6 +290,7 @@ sub create {
 	my $pwd = Cwd::cwd();
 	chdir $project_dir;
 
+    # FIXME: STDERR output is going to the console
 	my $output_text = qx{@cmd};
 	$main->output->AppendText($output_text);
 	

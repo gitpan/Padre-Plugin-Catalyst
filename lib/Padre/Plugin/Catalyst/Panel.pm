@@ -3,7 +3,7 @@ package Padre::Plugin::Catalyst::Panel;
 use strict;
 use warnings;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 use Padre::Wx ();
 use Padre::Util ('_T');
@@ -61,9 +61,8 @@ sub new {
     my $output = Padre::Wx::Output->new($self);
 	$box->Add( $output, 1, Wx::wxGROW );
 
-    # wrapping it up and showing on the screen
+    # wrapping it up
 	$self->SetSizer($box);
-	Padre::Current->main->bottom->show($self);
 	
 	# holding on to some objects we'll need to manipulate later on
 	$self->{output}   = $output;

@@ -7,7 +7,7 @@ use Cwd ();
 use File::Spec ();
 use Padre::Util   ('_T');
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 # get the Catalyst project name, so we can
 # figure out the development server's name
@@ -38,13 +38,35 @@ sub find_file_from_output {
 	}
 }
 
-sub get_document_base_dir {	
+sub get_document_base_dir {
 	my $main = Padre->ide->wx->main;
 	my $doc = $main->current->document;
+	
+	unless ($doc) {
+        Wx::MessageBox(
+            _T('Could not open current document. Please make sure you have at least one document open.'), 
+            _T('Catalyst project dir not found'), Wx::wxOK, $main
+        );
+        return;
+    }
+
 	my $filename = $doc->filename;
 	return Padre::Util::get_project_dir($filename);
 }
 
+# returns true if given filename (looks like) is inside a
+# Catalyst project
+sub in_catalyst_project {
+    require File::Spec;
+    my $filename = shift or return;
+
+    my $project_dir = Padre::Util::get_project_dir($filename);
+    
+    foreach my $dir ( qw(lib root script t) ) {
+        return unless -d File::Spec->catdir( $project_dir, $dir );
+    }
+    return 1;
+}
 
 #TODO: maybe this function (or some mutation of it)
 # is useful to other plugin authors. In this case, we
@@ -84,6 +106,28 @@ sub toggle_server_menu {
     if ($menu_start and $menu_stop) {
         $menu_start->Enable($toggle);
         $menu_stop->Enable(!$toggle);
+    }
+}
+
+sub toggle_menu_items {
+    my ($toggle, $is_server_on) = (@_);
+    
+    #TODO: caching this on startup would probably make things marginally faster
+    my $menu_helpers = get_plugin_menu_item_by_label(_T('Create new...'));
+    my $menu_start   = get_plugin_menu_item_by_label(_T('Start Web Server'));
+    my $menu_stop    = get_plugin_menu_item_by_label(_T('Stop Web Server'));
+    my $menu_update  = get_plugin_menu_item_by_label(_T('Update Application Scripts'));
+    
+    $menu_helpers->Enable($toggle) if $menu_helpers;
+    $menu_update->Enable($toggle) if $menu_update;
+    
+    if ($toggle == 0) {
+        $menu_start->Enable($toggle) if $menu_start;
+        $menu_stop->Enable($toggle) if $menu_stop;
+    }
+    else {
+        $menu_start->Enable(! $is_server_on) if $menu_start;
+        $menu_stop->Enable($is_server_on) if $menu_stop;
     }
 }
 
