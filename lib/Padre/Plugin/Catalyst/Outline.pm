@@ -1,6 +1,6 @@
 package Padre::Plugin::Catalyst::Outline;
 BEGIN {
-  $Padre::Plugin::Catalyst::Outline::VERSION = '0.12';
+  $Padre::Plugin::Catalyst::Outline::VERSION = '0.13';
 }
 
 # ABSTRACT: A Catalyst plugin outline
@@ -118,7 +118,7 @@ Padre::Plugin::Catalyst::Outline - A Catalyst plugin outline
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHORS
 

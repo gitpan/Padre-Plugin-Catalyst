@@ -1,6 +1,6 @@
 package Padre::Plugin::Catalyst::NewApp;
 BEGIN {
-  $Padre::Plugin::Catalyst::NewApp::VERSION = '0.12';
+  $Padre::Plugin::Catalyst::NewApp::VERSION = '0.13';
 }
 
 # ABSTRACT: A Catalyst New Application
@@ -182,7 +182,7 @@ Padre::Plugin::Catalyst::NewApp - A Catalyst New Application
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHORS
 

@@ -43,7 +43,7 @@
          "url" : "http://svn.perlide.org/padre/trunk/Padre-Plugin-Catalyst/"
       }
    },
-   "version" : "0.12",
+   "version" : "0.13",
    "x_Dist_Zilla" : {
       "plugins" : [
          {
