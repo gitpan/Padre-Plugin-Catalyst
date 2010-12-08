@@ -1,6 +1,6 @@
 package Padre::Plugin::Catalyst::Helper;
 BEGIN {
-  $Padre::Plugin::Catalyst::Helper::VERSION = '0.11';
+  $Padre::Plugin::Catalyst::Helper::VERSION = '0.12';
 }
 
 # ABSTRACT: The Catalyst plugin helper
@@ -327,7 +327,7 @@ Padre::Plugin::Catalyst::Helper - The Catalyst plugin helper
 
 =head1 VERSION
 
-version 0.11
+version 0.12
 
 =head1 AUTHORS
 

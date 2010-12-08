@@ -1,6 +1,6 @@
 package Padre::Plugin::Catalyst::Util;
 BEGIN {
-  $Padre::Plugin::Catalyst::Util::VERSION = '0.11';
+  $Padre::Plugin::Catalyst::Util::VERSION = '0.12';
 }
 
 # ABSTRACT: A collection of utility functions
@@ -140,7 +140,7 @@ Padre::Plugin::Catalyst::Util - A collection of utility functions
 
 =head1 VERSION
 
-version 0.11
+version 0.12
 
 =head1 AUTHORS
 

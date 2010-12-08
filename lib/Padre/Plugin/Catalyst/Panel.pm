@@ -1,6 +1,6 @@
 package Padre::Plugin::Catalyst::Panel;
 BEGIN {
-  $Padre::Plugin::Catalyst::Panel::VERSION = '0.11';
+  $Padre::Plugin::Catalyst::Panel::VERSION = '0.12';
 }
 
 # ABSTRACT: A Catalyst plugin panel
@@ -191,7 +191,7 @@ Padre::Plugin::Catalyst::Panel - A Catalyst plugin panel
 
 =head1 VERSION
 
-version 0.11
+version 0.12
 
 =head1 AUTHORS
 

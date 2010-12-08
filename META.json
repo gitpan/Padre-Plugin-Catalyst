@@ -15,14 +15,10 @@
    },
    "name" : "Padre-Plugin-Catalyst",
    "prereqs" : {
-      "build" : {
-         "requires" : {
-            "Module::Build" : "0.3601"
-         }
-      },
       "configure" : {
          "requires" : {
-            "Module::Build" : "0.3601"
+            "ExtUtils::MakeMaker" : "6.31",
+            "File::ShareDir::Install" : "0.03"
          }
       },
       "runtime" : {
@@ -47,7 +43,7 @@
          "url" : "http://svn.perlide.org/padre/trunk/Padre-Plugin-Catalyst/"
       }
    },
-   "version" : "0.11",
+   "version" : "0.12",
    "x_Dist_Zilla" : {
       "plugins" : [
          {
@@ -93,6 +89,11 @@
          {
             "class" : "Dist::Zilla::Plugin::ShareDir",
             "name" : "@PadrePlugin/@Filter/ShareDir",
+            "version" : "4.102345"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::MakeMaker",
+            "name" : "@PadrePlugin/@Filter/MakeMaker",
             "version" : "4.102345"
          },
          {
@@ -168,11 +169,6 @@
          {
             "class" : "Dist::Zilla::Plugin::PodSyntaxTests",
             "name" : "@PadrePlugin/PodSyntaxTests",
-            "version" : "4.102345"
-         },
-         {
-            "class" : "Dist::Zilla::Plugin::ModuleBuild",
-            "name" : "@PadrePlugin/ModuleBuild",
             "version" : "4.102345"
          },
          {

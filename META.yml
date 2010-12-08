@@ -5,10 +5,10 @@ author:
   - 'Ahmad M. Zawawi <ahmad.zawawi@gmail.com>'
 build_requires:
   Locale::Msgfmt: 0.15
-  Module::Build: 0.3601
   Test::More: 0
 configure_requires:
-  Module::Build: 0.3601
+  ExtUtils::MakeMaker: 6.31
+  File::ShareDir::Install: 0.03
 dynamic_config: 0
 generated_by: 'Dist::Zilla version 4.102345, CPAN::Meta::Converter version 2.102400'
 license: perl
@@ -24,7 +24,7 @@ requires:
 resources:
   homepage: http://padre.perlide.org
   repository: http://svn.perlide.org/padre/trunk/Padre-Plugin-Catalyst/
-version: 0.11
+version: 0.12
 x_Dist_Zilla:
   plugins:
     -
@@ -62,6 +62,10 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::ShareDir
       name: '@PadrePlugin/@Filter/ShareDir'
+      version: 4.102345
+    -
+      class: Dist::Zilla::Plugin::MakeMaker
+      name: '@PadrePlugin/@Filter/MakeMaker'
       version: 4.102345
     -
       class: Dist::Zilla::Plugin::Manifest
@@ -122,10 +126,6 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::PodSyntaxTests
       name: '@PadrePlugin/PodSyntaxTests'
-      version: 4.102345
-    -
-      class: Dist::Zilla::Plugin::ModuleBuild
-      name: '@PadrePlugin/ModuleBuild'
       version: 4.102345
     -
       class: Dist::Zilla::Plugin::LocaleMsgfmt
